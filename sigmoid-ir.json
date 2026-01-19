@@ -1,0 +1,14 @@
+{
+    "resourceSpecId": "",
+    "stableId": "lambda",
+    "displayName": "Lambda",
+    "resourceType": "compute.lambda",
+    "status": "draft",
+    "inputs": {
+        "function_name": "sigmoid-func",
+        "runtime": "nodejs20.x",
+        "handler": "index.handler",
+        "lambda_type": "NON_VPC"
+    },
+    "position": { "x": 0, "y": 0 }
+}
