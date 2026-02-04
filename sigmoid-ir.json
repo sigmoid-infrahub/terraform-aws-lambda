@@ -1,14 +1,80 @@
 {
-    "resourceSpecId": "",
+    "resourceSpecId": "4d0f1c39-8c45-4b7c-8f79-9b5d1d90a001",
     "stableId": "lambda",
     "displayName": "Lambda",
+    "category": "compute",
+    "iconUrl": "https://cdn.sigmoid.us/icons/aws/full-size/svg/compute/lambda.svg",
     "resourceType": "compute.lambda",
+    "vpcDependency": "optional",
     "status": "draft",
+    "deploy": {
+        "enabled": false
+    },
     "inputs": {
         "function_name": "sigmoid-func",
         "runtime": "nodejs20.x",
         "handler": "index.handler",
+        "role_arn": "arn:aws:iam::123456789012:role/lambda-role",
         "lambda_type": "NON_VPC"
+    },
+    "inputSpecs": [
+        { "name": "function_name", "type": "string", "required": true },
+        {
+            "name": "runtime",
+            "type": "string",
+            "required": true,
+            "validation": {
+                "enum": [
+                    "nodejs18.x",
+                    "nodejs20.x",
+                    "python3.9",
+                    "python3.10",
+                    "python3.11",
+                    "python3.12",
+                    "java17",
+                    "java21",
+                    "go1.x",
+                    "provided.al2",
+                    "provided.al2023"
+                ]
+            }
+        },
+        { "name": "handler", "type": "string", "required": true },
+        {
+            "name": "role_arn",
+            "type": "string",
+            "required": true,
+            "description": "IAM role ARN for Lambda execution"
+        },
+        { "name": "memory_size", "type": "number", "required": false, "default": 128, "validation": { "min": 128, "max": 10240 } },
+        { "name": "timeout", "type": "number", "required": false, "default": 3, "validation": { "min": 1, "max": 900 } },
+        {
+            "name": "vpc_config_enabled",
+            "type": "boolean",
+            "required": false,
+            "default": false,
+            "description": "Enable VPC configuration for Lambda"
+        },
+        {
+            "name": "subnet_ids",
+            "type": "array",
+            "required": false,
+            "conditionallyRequired": { "when": "vpc_config_enabled", "condition": "equals(true)" },
+            "description": "VPC subnet IDs (required when vpc_config_enabled is true)"
+        },
+        {
+            "name": "security_group_ids",
+            "type": "array",
+            "required": false,
+            "conditionallyRequired": { "when": "vpc_config_enabled", "condition": "equals(true)" },
+            "description": "Security group IDs (required when vpc_config_enabled is true)"
+        },
+        { "name": "environment", "type": "object", "required": false, "description": "Environment variables" }
+    ],
+    "terraform": {
+        "module": {
+            "source": "../../terraform-modules/terraform-aws-lambda"
+        }
     },
     "position": { "x": 0, "y": 0 }
 }

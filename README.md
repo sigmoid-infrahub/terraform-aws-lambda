@@ -56,6 +56,6 @@ module "lambda" {
 None
 
 ## Notes
-- `runtime` validation ensures supported Lambda runtimes (e.g., nodejs20.x, python3.12) are used.
+- `runtime` validation includes nodejs, python, java, go, dotnet, ruby, and provided runtimes.
 - If `vpc_config_enabled` is true, `subnet_ids` and `security_group_ids` are required.
 - Provide either `filename` or `s3_bucket`/`s3_key` for the deployment package.

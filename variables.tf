@@ -8,7 +8,7 @@ variable "runtime" {
   description = "Lambda runtime"
 
   validation {
-    condition     = contains(["nodejs20.x", "nodejs18.x", "nodejs16.x", "python3.12", "python3.11", "python3.10", "java21", "java17", "go1.x", "dotnet8", "dotnet6", "ruby3.2"], var.runtime)
+    condition     = contains(["nodejs20.x", "nodejs18.x", "nodejs16.x", "python3.12", "python3.11", "python3.10", "python3.9", "java21", "java17", "go1.x", "dotnet8", "dotnet6", "ruby3.2", "provided.al2", "provided.al2023"], var.runtime)
     error_message = "runtime must be a supported Lambda runtime string."
   }
 }
