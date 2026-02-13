@@ -15,5 +15,32 @@
             "source": "../../terraform-modules/terraform-aws-lambda"
         }
     },
+    "pricing": {
+        "lookups": [
+            {
+                "serviceCode": "AWSLambda",
+                "unit": "hourly",
+                "quantityProperties": ["monthly_compute_gb_seconds"],
+                "quantityDefault": 0,
+                "monthlyHours": 1,
+                "filters": [
+                    { "field": "location", "value": "${location}" },
+                    { "field": "group", "value": "AWS-Lambda-Duration" },
+                    { "field": "productFamily", "defaultValue": "Serverless", "required": false }
+                ]
+            },
+            {
+                "serviceCode": "AWSLambda",
+                "unit": "per_million",
+                "quantityProperties": ["monthly_requests"],
+                "quantityDefault": 0,
+                "filters": [
+                    { "field": "location", "value": "${location}" },
+                    { "field": "group", "value": "AWS-Lambda-Requests" },
+                    { "field": "productFamily", "defaultValue": "Serverless", "required": false }
+                ]
+            }
+        ]
+    },
     "position": { "x": 0, "y": 0 }
 }
