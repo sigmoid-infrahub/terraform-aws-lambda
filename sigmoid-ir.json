@@ -40,7 +40,26 @@
                     { "field": "productFamily", "defaultValue": "Serverless", "required": false }
                 ]
             }
-        ]
+        ],
+        "usageProfiles": {
+            "default": "medium",
+            "low": {
+                "monthly_requests": 1000000,
+                "monthly_compute_gb_seconds": 400000
+            },
+            "medium": {
+                "monthly_requests": 20000000,
+                "monthly_compute_gb_seconds": 8000000
+            },
+            "high": {
+                "monthly_requests": 200000000,
+                "monthly_compute_gb_seconds": 80000000
+            },
+            "xhigh": {
+                "monthly_requests": 1000000000,
+                "monthly_compute_gb_seconds": 400000000
+            }
+        }
     },
     "position": { "x": 0, "y": 0 }
 }
