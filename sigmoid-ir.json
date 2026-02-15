@@ -61,5 +61,11 @@
             }
         }
     },
-    "position": { "x": 0, "y": 0 }
+    "position": { "x": 0, "y": 0 },
+    "easy": {
+        "alias": "Function",
+        "group": "compute-function",
+        "priority": 10,
+        "allowedProperties": ["runtime", "handler", "timeout", "memory_size"]
+    }
 }
