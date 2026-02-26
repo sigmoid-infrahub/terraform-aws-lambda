@@ -21,6 +21,18 @@ variable "handler" {
 variable "role_arn" {
   type        = string
   description = "IAM role ARN for Lambda"
+  default     = null
+
+  validation {
+    condition     = var.create_iam_role || var.role_arn != null
+    error_message = "Either create_iam_role must be true or role_arn must be provided."
+  }
+}
+
+variable "create_iam_role" {
+  type        = bool
+  description = "Whether to create IAM role for Lambda"
+  default     = false
 }
 
 variable "memory_size" {
@@ -62,6 +74,36 @@ variable "security_group_ids" {
   type        = list(string)
   description = "Security group IDs for VPC config"
   default     = []
+}
+
+variable "create_security_group" {
+  type        = bool
+  description = "Whether to create security group for Lambda"
+  default     = false
+}
+
+variable "vpc_id" {
+  type        = string
+  description = "VPC ID for Lambda security group"
+  default     = null
+}
+
+variable "security_group_ingress_cidr_blocks" {
+  type        = list(string)
+  description = "Ingress CIDR blocks for Lambda security group"
+  default     = ["10.0.0.0/8"]
+}
+
+variable "create_log_group" {
+  type        = bool
+  description = "Whether to create CloudWatch log group for Lambda"
+  default     = false
+}
+
+variable "log_group_retention_in_days" {
+  type        = number
+  description = "CloudWatch log group retention in days"
+  default     = 14
 }
 
 variable "environment" {
