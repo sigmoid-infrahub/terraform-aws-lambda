@@ -1,0 +1,71 @@
+{
+    "resourceSpecId": "4d0f1c39-8c45-4b7c-8f79-9b5d1d90a001",
+    "stableId": "lambda",
+    "displayName": "Lambda",
+    "category": "compute",
+    "iconUrl": "https://cdn.sigmoid.us/icons/aws/full-size/svg/compute/lambda.svg",
+    "resourceType": "compute.lambda",
+    "vpcDependency": "optional",
+    "status": "draft",
+    "deploy": {
+        "enabled": false
+    },
+    "terraform": {
+        "module": {
+            "source": "../../terraform-modules/terraform-aws-lambda"
+        }
+    },
+    "pricing": {
+        "lookups": [
+            {
+                "serviceCode": "AWSLambda",
+                "unit": "hourly",
+                "quantityProperties": ["monthly_compute_gb_seconds"],
+                "quantityDefault": 0,
+                "monthlyHours": 1,
+                "filters": [
+                    { "field": "location", "value": "${location}" },
+                    { "field": "group", "value": "AWS-Lambda-Duration" },
+                    { "field": "productFamily", "defaultValue": "Serverless", "required": false }
+                ]
+            },
+            {
+                "serviceCode": "AWSLambda",
+                "unit": "per_million",
+                "quantityProperties": ["monthly_requests"],
+                "quantityDefault": 0,
+                "filters": [
+                    { "field": "location", "value": "${location}" },
+                    { "field": "group", "value": "AWS-Lambda-Requests" },
+                    { "field": "productFamily", "defaultValue": "Serverless", "required": false }
+                ]
+            }
+        ],
+        "usageProfiles": {
+            "default": "medium",
+            "low": {
+                "monthly_requests": 1000000,
+                "monthly_compute_gb_seconds": 400000
+            },
+            "medium": {
+                "monthly_requests": 20000000,
+                "monthly_compute_gb_seconds": 8000000
+            },
+            "high": {
+                "monthly_requests": 200000000,
+                "monthly_compute_gb_seconds": 80000000
+            },
+            "xhigh": {
+                "monthly_requests": 1000000000,
+                "monthly_compute_gb_seconds": 400000000
+            }
+        }
+    },
+    "position": { "x": 0, "y": 0 },
+    "easy": {
+        "alias": "Function",
+        "group": "compute-function",
+        "priority": 10,
+        "allowedProperties": ["runtime", "handler", "timeout", "memory_size"]
+    }
+}
