@@ -106,6 +106,74 @@ variable "log_group_retention_in_days" {
   default     = 14
 }
 
+variable "log_group_kms_key_id" {
+  type        = string
+  description = "KMS key ID or ARN used to encrypt CloudWatch logs. When empty, provider default encryption is used."
+  default     = ""
+}
+
+variable "reserved_concurrent_executions" {
+  type        = number
+  description = "Reserved concurrent executions for Lambda. Use -1 to leave concurrency unreserved."
+  default     = -1
+
+  validation {
+    condition     = var.reserved_concurrent_executions == -1 || var.reserved_concurrent_executions >= 0
+    error_message = "reserved_concurrent_executions must be -1 or greater than or equal to 0."
+  }
+}
+
+variable "tracing_mode" {
+  type        = string
+  description = "Lambda X-Ray tracing mode."
+  default     = "Active"
+
+  validation {
+    condition     = contains(["Active", "PassThrough"], var.tracing_mode)
+    error_message = "tracing_mode must be Active or PassThrough."
+  }
+}
+
+variable "dead_letter_target_arn" {
+  type        = string
+  description = "SNS topic or SQS queue ARN for Lambda dead letter delivery. When empty, dead letter config is disabled."
+  default     = ""
+}
+
+variable "code_signing_config_arn" {
+  type        = string
+  description = "Lambda code signing config ARN. When empty, code signing is not enforced by this module."
+  default     = ""
+}
+
+variable "architectures" {
+  type        = list(string)
+  description = "Instruction set architectures for Lambda. AWS allows exactly one value: arm64 or x86_64."
+  default     = ["arm64"]
+
+  validation {
+    condition     = length(var.architectures) == 1 && alltrue([for architecture in var.architectures : contains(["arm64", "x86_64"], architecture)])
+    error_message = "architectures must contain exactly one value: arm64 or x86_64."
+  }
+}
+
+variable "ephemeral_storage_size" {
+  type        = number
+  description = "Lambda ephemeral storage size in MB."
+  default     = 512
+
+  validation {
+    condition     = var.ephemeral_storage_size >= 512 && var.ephemeral_storage_size <= 10240
+    error_message = "ephemeral_storage_size must be between 512 and 10240 MB."
+  }
+}
+
+variable "kms_key_arn" {
+  type        = string
+  description = "KMS key ARN used to encrypt Lambda environment variables. When empty, AWS-managed encryption is used."
+  default     = ""
+}
+
 variable "environment" {
   type        = map(string)
   description = "Environment variables"
