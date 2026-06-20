@@ -42,6 +42,8 @@ module "lambda" {
 | `s3_key` | `string` | `null` | S3 key for deployment package |
 | `s3_object_version` | `string` | `null` | S3 object version for deployment package |
 | `source_code_hash` | `string` | `null` | Base64-encoded SHA256 of deployment package |
+| `create_function_url` | `bool` | `false` | Whether to create a Lambda function URL endpoint |
+| `function_url_authorization_type` | `string` | `"AWS_IAM"` | Authorization type for the function URL. AWS_IAM requires SigV4-signed requests; NONE makes the endpoint publicly invokable by anyone. |
 | `tags` | `map(string)` | `{}` | Tags to apply to Lambda |
 
 ## Outputs
@@ -50,6 +52,7 @@ module "lambda" {
 | `function_name` | Lambda function name |
 | `invoke_arn` | Lambda invoke ARN |
 | `arn` | Lambda ARN |
+| `function_url` | Lambda function URL endpoint (null when create_function_url is false) |
 | `module` | Full module outputs |
 
 ## Environment Variables

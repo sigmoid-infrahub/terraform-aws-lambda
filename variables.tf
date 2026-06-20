@@ -210,6 +210,23 @@ variable "source_code_hash" {
   default     = null
 }
 
+variable "create_function_url" {
+  type        = bool
+  description = "Whether to create a Lambda function URL endpoint"
+  default     = false
+}
+
+variable "function_url_authorization_type" {
+  type        = string
+  description = "Authorization type for the function URL. AWS_IAM requires SigV4-signed requests; NONE makes the endpoint publicly invokable by anyone."
+  default     = "AWS_IAM"
+
+  validation {
+    condition     = contains(["AWS_IAM", "NONE"], var.function_url_authorization_type)
+    error_message = "function_url_authorization_type must be AWS_IAM or NONE."
+  }
+}
+
 variable "tags" {
   type        = map(string)
   description = "Tags to apply to Lambda"

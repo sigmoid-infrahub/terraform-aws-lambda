@@ -43,6 +43,11 @@ output "log_group_arn" {
   value       = var.create_log_group ? aws_cloudwatch_log_group.this[0].arn : null
 }
 
+output "function_url" {
+  description = "Lambda function URL endpoint (null when create_function_url is false)"
+  value       = var.create_function_url ? aws_lambda_function_url.this[0].function_url : null
+}
+
 output "module" {
   description = "Full module outputs"
   value = {
@@ -55,5 +60,6 @@ output "module" {
     security_group_id = var.create_security_group ? aws_security_group.this[0].id : null
     log_group_name    = var.create_log_group ? aws_cloudwatch_log_group.this[0].name : null
     log_group_arn     = var.create_log_group ? aws_cloudwatch_log_group.this[0].arn : null
+    function_url      = var.create_function_url ? aws_lambda_function_url.this[0].function_url : null
   }
 }
