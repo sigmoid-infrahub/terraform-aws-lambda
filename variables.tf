@@ -227,6 +227,12 @@ variable "function_url_authorization_type" {
   }
 }
 
+variable "target_group_arns" {
+  description = "ALB target group ARNs to register this Lambda function into"
+  type        = list(string)
+  default     = []
+}
+
 variable "tags" {
   type        = map(string)
   description = "Tags to apply to Lambda"

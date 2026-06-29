@@ -118,3 +118,18 @@ resource "aws_lambda_function_url" "this" {
   function_name      = aws_lambda_function.this.function_name
   authorization_type = var.function_url_authorization_type
 }
+
+resource "aws_lambda_permission" "alb" {
+  count         = length(var.target_group_arns) > 0 ? 1 : 0
+  statement_id  = "AllowALBInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.this.function_name
+  principal     = "elasticloadbalancing.amazonaws.com"
+}
+
+resource "aws_lb_target_group_attachment" "this" {
+  count            = length(var.target_group_arns)
+  target_group_arn = var.target_group_arns[count.index]
+  target_id        = aws_lambda_function.this.arn
+  depends_on       = [aws_lambda_permission.alb]
+}
