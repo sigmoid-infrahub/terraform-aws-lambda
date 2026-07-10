@@ -33,6 +33,14 @@ resource "aws_iam_role_policy_attachment" "lambda_vpc" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
 
+resource "aws_iam_role_policy" "lambda_inline" {
+  for_each = var.create_iam_role ? { for policy in var.iam_role_inline_policies : policy.name => policy } : {}
+
+  name   = each.value.name
+  role   = aws_iam_role.lambda[0].id
+  policy = each.value.policy
+}
+
 resource "aws_security_group" "this" {
   count = var.create_security_group ? 1 : 0
 

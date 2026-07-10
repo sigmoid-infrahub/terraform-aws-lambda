@@ -35,6 +35,15 @@ variable "create_iam_role" {
   default     = false
 }
 
+variable "iam_role_inline_policies" {
+  type = list(object({
+    name   = string
+    policy = string
+  }))
+  description = "Inline IAM policies attached to the created Lambda role (e.g. access to connected S3 buckets or tables)"
+  default     = []
+}
+
 variable "memory_size" {
   type        = number
   description = "Lambda memory size"
