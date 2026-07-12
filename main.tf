@@ -41,6 +41,55 @@ resource "aws_iam_role_policy" "lambda_inline" {
   policy = each.value.policy
 }
 
+# Connected-resource access. Backend passes raw ARNs as resolved module outputs;
+# the policy JSON (with s3 /* and dynamodb /index/* suffixes) is built here so no
+# literal "${module...}" string ever reaches Terraform. Keep in sync with the
+# identical block in terraform-aws-ecs.
+locals {
+  connected_access_statements = concat(
+    length(var.connected_s3_bucket_arns) == 0 ? [] : [
+      {
+        Effect   = "Allow"
+        Action   = ["s3:GetObject", "s3:PutObject"]
+        Resource = [for arn in var.connected_s3_bucket_arns : "${arn}/*"]
+      },
+      {
+        Effect   = "Allow"
+        Action   = ["s3:ListBucket"]
+        Resource = var.connected_s3_bucket_arns
+      },
+    ],
+    length(var.connected_dynamodb_table_arns) == 0 ? [] : [
+      {
+        Effect = "Allow"
+        Action = [
+          "dynamodb:GetItem",
+          "dynamodb:PutItem",
+          "dynamodb:Query",
+          "dynamodb:Scan",
+          "dynamodb:UpdateItem",
+          "dynamodb:DeleteItem",
+        ]
+        Resource = concat(
+          var.connected_dynamodb_table_arns,
+          [for arn in var.connected_dynamodb_table_arns : "${arn}/index/*"],
+        )
+      },
+    ],
+  )
+}
+
+resource "aws_iam_role_policy" "lambda_connected_access" {
+  count = var.create_iam_role && length(local.connected_access_statements) > 0 ? 1 : 0
+
+  name = "${var.function_name}-connected-access"
+  role = aws_iam_role.lambda[0].id
+  policy = jsonencode({
+    Version   = "2012-10-17"
+    Statement = local.connected_access_statements
+  })
+}
+
 resource "aws_security_group" "this" {
   count = var.create_security_group ? 1 : 0
 

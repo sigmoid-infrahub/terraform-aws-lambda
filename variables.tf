@@ -44,6 +44,18 @@ variable "iam_role_inline_policies" {
   default     = []
 }
 
+variable "connected_s3_bucket_arns" {
+  type        = list(string)
+  description = "S3 bucket ARNs the Lambda role is granted access to"
+  default     = []
+}
+
+variable "connected_dynamodb_table_arns" {
+  type        = list(string)
+  description = "DynamoDB table ARNs the Lambda role is granted access to"
+  default     = []
+}
+
 variable "memory_size" {
   type        = number
   description = "Lambda memory size"
