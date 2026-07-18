@@ -115,6 +115,18 @@ variable "security_group_ingress_cidr_blocks" {
   default     = ["10.0.0.0/8"]
 }
 
+variable "data_ingress_rules" {
+  type = list(object({
+    security_group_id = string
+    from_port         = number
+    to_port           = number
+    protocol          = optional(string, "tcp")
+    description       = optional(string, "")
+  }))
+  description = "Ingress rules created on connected data resources' security groups (target security_group_id), sourced from this function's created security group. Emitted here (not on the data module) to avoid a data<->compute module dependency cycle. Meaningful only for VPC-attached Lambdas."
+  default     = []
+}
+
 variable "create_log_group" {
   type        = bool
   description = "Whether to create CloudWatch log group for Lambda"
