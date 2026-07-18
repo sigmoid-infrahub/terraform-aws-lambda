@@ -112,18 +112,15 @@ resource "aws_security_group" "this" {
 # module) so the data module never references the compute SG, which would form a
 # data<->compute module dependency cycle. Meaningful only for VPC-attached Lambdas.
 resource "aws_security_group_rule" "data_ingress" {
-  for_each = {
-    for rule in var.data_ingress_rules :
-    "${rule.security_group_id}-${rule.from_port}-${rule.protocol}" => rule
-  }
+  count = length(var.data_ingress_rules)
 
   type                     = "ingress"
-  security_group_id        = each.value.security_group_id
+  security_group_id        = var.data_ingress_rules[count.index].security_group_id
   source_security_group_id = aws_security_group.this[0].id
-  from_port                = each.value.from_port
-  to_port                  = each.value.to_port
-  protocol                 = each.value.protocol
-  description              = each.value.description
+  from_port                = var.data_ingress_rules[count.index].from_port
+  to_port                  = var.data_ingress_rules[count.index].to_port
+  protocol                 = var.data_ingress_rules[count.index].protocol
+  description              = var.data_ingress_rules[count.index].description
 }
 
 resource "aws_cloudwatch_log_group" "this" {
